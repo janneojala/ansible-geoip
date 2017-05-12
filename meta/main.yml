@@ -1,0 +1,12 @@
+# meta file for geoip
+---
+galaxy_info:
+  author: Janne Ojala
+  company: Haahtela-kehitys Oy
+  description: Ansibles role for downloading and building GeoIP databases on debian based systems
+  license: MIT
+  platforms:
+    - name: Debian, Ubuntu
+  galaxy_tags:
+    - GeoIP
+dependencies: []
