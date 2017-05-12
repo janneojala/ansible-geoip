@@ -1,0 +1,37 @@
+---
+
+- name: Install the GeoIP libraries
+  apt: name={{ item }} state=present update_cache=yes
+  with_items: 
+    - libtext-csv-xs-perl
+    - xtables-addons-common
+    - xtables-addons-dkms
+    - geoip-bin
+  when: ansible_os_family == "Debian"
+
+- name: Ensure GeoIP directory exists
+  file: 
+    path=/usr/share/xt_geoip 
+    state=directory 
+
+- name: Copy GeoIp executables
+  copy: 
+    remote_src=True
+    src="/usr/lib/xtables-addons/{{ item }}"
+    dest="/usr/share/xt_geoip/{{item}}"
+    mode="u=rwx,g=rx,o=rx"
+  with_items:
+    - xt_geoip_dl
+    - xt_geoip_build 
+
+- name: Download and build GeoIP database
+  command: "{{ item }}"
+  args:
+    chdir: "/usr/share/xt_geoip"
+  with_items:
+    - "./xt_geoip_dl"
+    - "./xt_geoip_build -D /usr/share/xt_geoip GeoIPCountryWhois.csv"
+  become: true
+
+
+
